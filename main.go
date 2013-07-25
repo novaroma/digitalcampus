@@ -1,9 +1,20 @@
 package main
 
 import (
-	"log"
+	"fmt"
+	"net/http"
+	"os"
 )
 
 func main() {
-	log.Println("Digital Campus v0.1.0")
+	http.HandleFunc("/", hello)
+	fmt.Println("listening...")
+	err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func hello(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "hello, heroku")
 }
