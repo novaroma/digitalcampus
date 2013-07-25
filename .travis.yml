@@ -1,0 +1,10 @@
+language: go
+go: 1.1.1
+
+deploy:
+    provider: heroku
+    api_key: 48645d3fc4b4cefd5c5727a4bb0900d7452c1bc5
+    strategy: git
+    app: 
+        development: digitalcampus-staging
+        master: digitalcampus
