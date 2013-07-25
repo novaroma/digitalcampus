@@ -9,6 +9,7 @@ import (
 
 func main() {
 	http.HandleFunc("/", index)
+	http.Handle("/content/", http.StripPrefix("/content/", http.FileServer(http.Dir("./client"))))
 	log.Println("listening...")
 	err := http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 	if err != nil {
