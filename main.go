@@ -188,9 +188,10 @@ func main() {
 // connect exchanges the one-time authorization code for a token and stores the
 // token in the session
 func connect(w http.ResponseWriter, r *http.Request) *appError {
+	log.Printf("Responding to request %s with connect handler.", r.URL.Path)
 	// Ensure that the request is not a forgery and that the user sending this
 	// connect request is the expected user
-	session, err := store.Get(r, "sessionName")
+	session, err := store.Get(r, "DigitalCampusSession")
 	if err != nil {
 		log.Println("error fetching the session:", err)
 		return &appError{err, "Error fetching the session", http.StatusInternalServerError}
@@ -233,13 +234,16 @@ func connect(w http.ResponseWriter, r *http.Request) *appError {
 	session.Values["accessToken"] = accessToken
 	session.Values["gplusID"] = gplusID
 	session.Save(r, w)
+
+	log.Printf("Successfully handled request %s.", r.URL.Path)
 	return nil
 }
 
 // disconnect revokes the current user's token and resets theri session
 func disconnect(w http.ResponseWriter, r *http.Request) *appError {
+	log.Printf("Responding to request %s with disconnect handler", r.URL.Path)
 	// Only disconnect a connected user 
-	session, err := store.Get(r, "sessionName")
+	session, err := store.Get(r, "DigitalCampusSession")
 	if err != nil {
 		log.Println("error fetching session:", err)
 		return &appError{err, "Error fetching session", http.StatusInternalServerError}
@@ -262,11 +266,13 @@ func disconnect(w http.ResponseWriter, r *http.Request) *appError {
 	// Reset the user's session
 	session.Values["accessToken"] = nil
 	session.Save(r, w)
+	log.Printf("Successfully handled request %s", r.URL.Path)
 	return nil
 }
 
 func people(w http.ResponseWriter, r *http.Request) *appError {
-	session, err := store.Get(r, "sessionName")
+	log.Printf("Responding to request %s with people handler", r.URL.Path)
+	session, err := store.Get(r, "DigitalCampusSession")
 	if err != nil {
 		log.Println("error fetching session:", err)
 		return &appError{err, "Error fetching session", http.StatusInternalServerError}
@@ -303,6 +309,7 @@ func people(w http.ResponseWriter, r *http.Request) *appError {
 	if err != nil {
 		return &appError{err, "Convert PeopleFeed to JSON", http.StatusInternalServerError}
 	}
+	log.Printf("Successfully handled request %s", r.URL.Path)
 	return nil
 }
 
@@ -318,13 +325,15 @@ func index(w http.ResponseWriter, r *http.Request) *appError {
 
 	// Create a state token to prevent request forgery and store it in the 
 	// session for later validation. 
-	session, err := store.Get(r, "sessionName")
+	session, err := store.Get(r, "DigitalCampusSession")
 	if err != nil {
 		log.Println("error fetching session:", err)
 		// Ignore the initial session fetch error, as Get() returns a 
 		// session even if empty.
 		if !session.IsNew {
 			return &appError{err, "Error fetching session", 500}
+		} else {
+			log.Println("created new session:", session.ID)
 		}
 	}
 	state := randomString(64)
