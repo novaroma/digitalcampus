@@ -41,17 +41,7 @@
 			   information retrieved from Google for the given user.</p>
 			<button id="disconnect">Disconnect your Google account from this app</button>
 
-			<h2>Users's profile information</h2>
-			<p>This data is retrieved client-side by using the Google JavaScript
-			   API client library.</p>
 			<div id="profile"></div>
-
-			<h2>Users's friends that are visible to this app.</h2>
-			<p>This data is retrieved from your server, where your server makes
-			   an authorized HTTP request on the user's behalf.</p>
-			<p>If your app uses server-side rendering, this is the section you 
-			   would change using your server-side templating system.</p>
-			<div id="visiblePeople"></div>
 
 			<h2>Authentication Logs</h2>
 			<pre id="authResult"></pre>
@@ -64,6 +54,10 @@
 					Google based oauth authentication
 				</span>
 				<span>[Tenatively]</span>
+			</li>
+			<li>
+				Student identity data must be encrypted and only visible to 
+				authorized users (students' teachers / administrators)
 			</li>
 			<li>Ability to add periods/sections</li>
 			<li>Ability to create daily landing page for students</li>
